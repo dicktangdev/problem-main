@@ -32,6 +32,22 @@ const querySchema = new mongoose.Schema({
 // Define model
 const Query = mongoose.model('Query', querySchema);
 
+// Middleware function for logging
+function logRequest(req, res, next) {
+  const clientIP = req.ip; 
+  const timestamp = new Date().toISOString();
+  const method = req.method;
+  const url = req.originalUrl;
+  const statusCode = res.statusCode;
+
+  console.log(`[${timestamp}] ${clientIP} ${method} ${url} ${statusCode}`);
+
+  next();
+}
+
+// Apply the middleware to all routes
+app.use(logRequest);
+
 app.use(bodyParser.json());
 
 // Define the metric variables outside of the generateMetrics function
@@ -46,19 +62,26 @@ const healthGauge = new prometheus.Gauge({
   help: 'Health status of the service (1 = healthy, 0 = unhealthy)',
 });
 
-// Your Prometheus metrics logic here, according to prometheus metrics format
 async function generateMetrics() {
-  // Example: Set health gauge to 1 (healthy)
-  healthGauge.set(1);
+  // Check database connection
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  
+  // Set health gauge based on database status
+  if (dbStatus === 'connected') {
+    healthGauge.set(1); // Set health gauge to 1 (healthy)
+  } else {
+    healthGauge.set(0); // Set health gauge to 0 (unhealthy)
+  }
 
-  // Return the metrics as a string
+  // Return the metrics
   return prometheus.register.metrics();
 }
+
 
 // Prometheus Metrics endpoint
 app.get('/metrics', async (req, res) => {
   try {
-    const metrics = await generateMetrics(); // This function should return the metrics as a string
+    const metrics = await generateMetrics(); 
     res.set('Content-Type', prometheus.register.contentType);
     res.end(metrics);
   } catch (error) {
