@@ -5,10 +5,7 @@ node_modules/
 .env
 
 # Log files
-logs/
-
-# Compiled source code (if using TypeScript, CoffeeScript, etc.)
-*.js
+logs/ß
 
 # Temporary files
 *.log
