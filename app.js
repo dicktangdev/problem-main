@@ -3,7 +3,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dns = require('dns');
 const prometheus = require('prom-client');
+const swaggerUi = require('swagger-ui-express');
+const cors = require('cors');
 
+const swaggerDocument = require('./swagger.json'); 
 const app = express();
 const PORT = 3000;
 
@@ -47,7 +50,7 @@ function logRequest(req, res, next) {
 
 // Apply the middleware to all routes
 app.use(logRequest);
-
+app.use(cors());
 app.use(bodyParser.json());
 
 // Define the metric variables outside of the generateMetrics function
@@ -107,6 +110,9 @@ app.get('/', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health endpoint
 app.get('/health', async (req, res) => {
