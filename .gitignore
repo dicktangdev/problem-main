@@ -1,0 +1,26 @@
+# Dependency directories
+node_modules/
+
+# Environment variables file (if using dotenv or similar)
+.env
+
+# Log files
+logs/
+
+# Compiled source code (if using TypeScript, CoffeeScript, etc.)
+*.js
+
+# Temporary files
+*.log
+*.pid
+*.lock
+
+# IDE or editor specific files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
