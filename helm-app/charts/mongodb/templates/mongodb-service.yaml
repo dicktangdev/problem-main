@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helm-app.mongodbFullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "helm-app.mongodbLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.mongodb_port }}
+      targetPort: {{ .Values.service.mongodb_port }}
+      protocol: TCP
+      name: tcp
+  selector:
+    {{- include "helm-app.mongodbSelectorLabels" . | nindent 4 }}

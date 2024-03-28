@@ -1,0 +1,16 @@
+replicaCount: 1
+
+namespace: stakefish-app
+
+storageclass: gp3
+
+service:
+  type: ClusterIP
+  mongodb_port: 27017
+
+mongodb:
+  enabled: true
+  useExternal: false
+  MONGO_DB: mydatabase
+  secretName: mongodb-credentials
+

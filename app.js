@@ -49,7 +49,8 @@ const Query = mongoose.model('Query', querySchema);
 
 // Middleware function for logging
 function logRequest(req, res, next) {
-  const clientIP = req.ip; 
+  const clientIP = req.ip;
+  console.log(req) 
   const timestamp = new Date().toISOString();
   const method = req.method;
   const url = req.originalUrl;
@@ -258,7 +259,7 @@ app.use((req, res) => {
 });
 
 // Start the server
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => { 
   console.log(`Server running on port ${PORT}`);
 });
 

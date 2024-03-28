@@ -1,0 +1,19 @@
+replicaCount: 1
+
+namespace: stakefish-app
+
+storageclass: gp3
+
+image:
+  repository: dicktangdev/problem-main
+  pullPolicy: IfNotPresent
+  tag: "0.1.0"
+
+service:
+  type: ClusterIP
+  app_port: 3000
+
+
+mongodb:
+  MONGO_DB: mydatabase
+  secretName: mongodb-credentials
