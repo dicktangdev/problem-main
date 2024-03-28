@@ -1,0 +1,41 @@
+stages:
+  - test
+  - build
+  - package
+
+variables:
+  DOCKER_IMAGE_NAME: dicktangdev/problem-main
+  DOCKER_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+
+test:
+  stage: test
+  image: node:latest
+  script:
+    - cd src
+    - npm install
+    # - npm test  # need mongodb connected to pass endpoint cases
+
+build:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      alias: docker
+  before_script:
+    - docker --version
+    - until docker info; do sleep 1; done
+  script:
+    - cd src
+    - docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
+    # - docker push dicktangdev/problem-main:$DOCKER_IMAGE_TAG   # need docker login first
+
+package:
+  stage: package
+  image: alpine/helm:latest
+  script:
+    - |
+      sed -i '' "s/tag: \"[^\"]*\"/tag: \"$DOCKER_IMAGE_TAG\"/" helm-app/values.yaml
+    - helm package helm-app -d charts
+  artifacts:
+    paths:
+      - charts/*.tgz

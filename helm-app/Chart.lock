@@ -1,0 +1,9 @@
+dependencies:
+- name: app
+  repository: file://./charts/app
+  version: 0.1.0
+- name: mongodb
+  repository: file://./charts/mongodb
+  version: 0.1.0
+digest: sha256:ddf1ef9c5ca533dbd7b926729a3a91ecc9d2fff44b4933b81aa70cbc4710ec2a
+generated: "2024-03-28T16:24:21.33889+08:00"

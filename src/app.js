@@ -14,8 +14,8 @@ const MONGO_DB = process.env.MONGO_DB
 const MONGO_USER = process.env.MONGO_USER
 const MONGO_PWD = process.env.MONGO_PWD
 
-// Connect to MongoDB from local
-// mongoose.connect('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true })
+// // Connect to MongoDB from local without authentication
+// mongoose.connect('mongodb://localhost:27017/')
 //   .then(() => console.log('Connected to MongoDB'))
 //   .catch(err => console.error('Error connecting to MongoDB:', err));
 
@@ -50,7 +50,6 @@ const Query = mongoose.model('Query', querySchema);
 // Middleware function for logging
 function logRequest(req, res, next) {
   const clientIP = req.ip;
-  console.log(req) 
   const timestamp = new Date().toISOString();
   const method = req.method;
   const url = req.originalUrl;
@@ -273,3 +272,4 @@ process.on('SIGINT', () => {
 });
 
 
+module.exports = app;
