@@ -5,13 +5,25 @@ const dns = require('dns');
 const prometheus = require('prom-client');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
+require('dotenv').config();
 
 const swaggerDocument = require('./swagger.json'); 
 const app = express();
 const PORT = 3000;
+const MONGO_DB = process.env.MONGO_DB
+const MONGO_USER = process.env.MONGO_USER
+const MONGO_PWD = process.env.MONGO_PWD
+
+// Connect to MongoDB from local
+// mongoose.connect('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => console.log('Connected to MongoDB'))
+//   .catch(err => console.error('Error connecting to MongoDB:', err));
+
+// MongoDB URI using environment variables
+const mongoURI = `mongodb://${MONGO_USER}:${encodeURIComponent(MONGO_PWD)}@mongodb:27017/${MONGO_DB}?authSource=admin`;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/mydatabase', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
@@ -52,6 +64,7 @@ function logRequest(req, res, next) {
 app.use(logRequest);
 app.use(cors());
 app.use(bodyParser.json());
+// app.set('trust proxy', true)
 
 // Define the metric variables outside of the generateMetrics function
 const httpRequestCounter = new prometheus.Counter({

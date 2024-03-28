@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      # - prometheus
+    environment:
+      MONGO_DB: mydatabase
+      MONGO_USER: stakefish
+      MONGO_PWD: stakefishpwd
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=stakefish
+      - MONGO_INITDB_ROOT_PASSWORD=stakefishpwd
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backend
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus:/etc/prometheus
+  #   command: --config.file=/etc/prometheus/prometheus.yml
+  #   networks:
+  #     - backend
+
+networks:
+  backend:
+
+volumes:
+  mongodb_data:
